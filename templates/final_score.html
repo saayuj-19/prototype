@@ -33,9 +33,9 @@
     <div class="score-container">
         <h2>Your Final Score</h2>
         <div class="final-score">
-            You scored {{ score }} out of {{ total }}.
+            SCORE: {{ score }}/{{ total }}.
         </div>
     </div>
-    <a href="{{ url_for('index') }}"><button>Restart Quiz</button></a>
+    <a href="{{ url_for('restart') }}"><button>Restart Quiz</button></a>
 </body>
 </html>

@@ -9,13 +9,11 @@ def load_questions():
         data = json.load(file)
     return data['questions']
 
-# Store user answers in a session (so they persist between requests)
-# You can use Flask session to store user data like scores
 from flask import session
 
 app.secret_key = 'your_secret_key'  # Needed for session to work
 
-# Initialize user's data (score, current question index, etc.)
+# Initialize user's data
 @app.before_request
 def before_request():
     if 'score' not in session:
@@ -23,7 +21,7 @@ def before_request():
         session['current_question'] = 0
         session['answers'] = []
 
-# Route to display the question and get user input
+# Display the question for user input
 @app.route('/', methods=['GET', 'POST'])
 def index():
     questions = load_questions()
@@ -39,11 +37,11 @@ def index():
         user_answer = request.form['user_answer']
         correct_answer = question['correct_answer']
         
-        # Check if the answer is correct
+        # Answer Check
         if user_answer == correct_answer:
             session['score'] += 1
         
-        # Save the answer to the answers list
+        # Save Answer 
         session['answers'].append({
             'question': question['question'],
             'user_answer': user_answer,
@@ -51,18 +49,24 @@ def index():
             'is_correct': user_answer == correct_answer
         })
         
-        # Move to the next question
+        # Next Question
         session['current_question'] += 1
         
         return redirect(url_for('index'))
     
     return render_template('index.html', question=question, index=current_question_index)
 
-# Route to show the final score after all questions are answered
+# Final Score Route
 @app.route('/final_score')
 def final_score():
     questions = load_questions()
     return render_template('final_score.html', score=session['score'], total=len(questions))
+
+# Restart the quiz
+@app.route('/restart')
+def restart():
+    session.clear()
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.run(debug=True)
