@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        .question-container {
+            margin: 20px 0;
+        }
+        .options {
+            margin: 20px 0;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="question-container">
+        <h2>{{ question['question'] }}</h2>
+
+        {% if question['type'] == 'multiple_choice' %}
+            <form method="POST" action="{{ url_for('index') }}">
+                <div class="options">
+                    {% for option in question['options'] %}
+                        <input type="radio" id="{{ option }}" name="user_answer" value="{{ option }}">
+                        <label for="{{ option }}">{{ option }}</label><br>
+                    {% endfor %}
+                </div>
+                <button type="submit">Submit Answer</button>
+            </form>
+        {% elif question['type'] == 'user_input' %}
+            <form method="POST" action="{{ url_for('index') }}">
+                <input type="text" name="user_answer" placeholder="Your answer">
+                <button type="submit">Submit Answer</button>
+            </form>
+        {% endif %}
+    </div>
+
+    {% if index + 1 < questions | length %}
+        <form method="POST" action="{{ url_for('next_question', current_question_index=index) }}">
+            <button type="submit">Next Question</button>
+        </form>
+    {% else %}
+        <p>You have completed the quiz!</p>
+    {% endif %}
+</body>
+</html>

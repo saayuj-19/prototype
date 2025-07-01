@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Score</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        .score-container {
+            margin: 20px 0;
+        }
+        .final-score {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="score-container">
+        <h2>Your Final Score</h2>
+        <div class="final-score">
+            You scored {{ score }} out of {{ total }}.
+        </div>
+    </div>
+    <a href="{{ url_for('index') }}"><button>Restart Quiz</button></a>
+</body>
+</html>

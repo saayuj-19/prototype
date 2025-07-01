@@ -1,0 +1,31 @@
+{
+  "questions": [
+    {
+      "type": "multiple_choice",
+      "question": "What is the capital of France?",
+      "options": [
+        "Berlin",
+        "Madrid",
+        "Paris",
+        "Rome"
+      ],
+      "correct_answer": "Paris"
+    },
+    {
+      "type": "multiple_choice",
+      "question": "Which of the following is a prime number?",
+      "options": [
+        "4",
+        "9",
+        "13",
+        "15"
+      ],
+      "correct_answer": "13"
+    },
+    {
+      "type": "user_input",
+      "question": "What is the square root of 64?",
+      "correct_answer": "8"
+    }
+  ]
+}
