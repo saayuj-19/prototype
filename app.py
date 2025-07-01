@@ -1,47 +1,48 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 import json
 
 app = Flask(__name__)
 
 # Load questions from the JSON file
 def load_questions():
+    """This function loads the quiz questions from the JSON file."""
     with open('questions.json', 'r') as file:
         data = json.load(file)
     return data['questions']
 
-from flask import session
+app.secret_key = 'your_secret_key'  # Secret key to encrypt session cookies
 
-app.secret_key = 'your_secret_key'  # Needed for session to work
-
-# Initialize user's data
+# Initialize session variables
 @app.before_request
 def before_request():
-    if 'score' not in session:
-        session['score'] = 0
-        session['current_question'] = 0
+    """This function ensures that session variables for score and question tracking are initialized."""
+    if 'score' not in session: 
+        session['score'] = 0 
+        session['current_question'] = 0  
         session['answers'] = []
 
-# Display the question for user input
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    questions = load_questions()
-    current_question_index = session['current_question']
-    
+    """This route displays a question, checks answers, and moves to the next question."""
+    questions = load_questions()  # Load all questions
+    current_question_index = session['current_question']  
+
+    # If all questions are answered, display the final score
     if current_question_index >= len(questions):
-        # If all questions are answered, show the final score
         return render_template('final_score.html', score=session['score'], total=len(questions))
 
+    # Get the current question object
     question = questions[current_question_index]
     
     if request.method == 'POST':
         user_answer = request.form['user_answer']
         correct_answer = question['correct_answer']
         
-        # Answer Check
+        # Check if the user's answer is correct
         if user_answer == correct_answer:
-            session['score'] += 1
+            session['score'] += 1 
         
-        # Save Answer 
+        # Save the user's answer and its correctness in the session
         session['answers'].append({
             'question': question['question'],
             'user_answer': user_answer,
@@ -49,24 +50,26 @@ def index():
             'is_correct': user_answer == correct_answer
         })
         
-        # Next Question
         session['current_question'] += 1
         
         return redirect(url_for('index'))
     
     return render_template('index.html', question=question, index=current_question_index)
 
-# Final Score Route
+# Final Score
 @app.route('/final_score')
 def final_score():
+    """This route displays the final score of the user after completing all questions."""
     questions = load_questions()
     return render_template('final_score.html', score=session['score'], total=len(questions))
 
-# Restart the quiz
+# Route to restart the quiz
 @app.route('/restart')
 def restart():
-    session.clear()
+    """This route clears the session to restart the quiz."""
+    session.clear() 
     return redirect(url_for('index'))
 
+# Run the Flask app
 if __name__ == '__main__':
     app.run(debug=True)
