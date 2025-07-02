@@ -12,13 +12,21 @@ def load_questions():
 
 app.secret_key = 'your_secret_key'  # Secret key to encrypt session cookies
 
+def normalize_answer(ans):
+    """Normalize answers for comparison by removing LaTeX delimiters, spaces, and lowering case."""
+    if not ans:
+        return ''
+    return ans.replace('\\(', '').replace('\\)', '').replace(' ', '').lower()
+
 # Initialize session variables
 @app.before_request
 def before_request():
     """This function ensures that session variables for score and question tracking are initialized."""
     if 'score' not in session: 
         session['score'] = 0 
+    if 'current_question' not in session:
         session['current_question'] = 0  
+    if 'answers' not in session:
         session['answers'] = []
 
 @app.route('/', methods=['GET', 'POST'])
@@ -35,20 +43,23 @@ def index():
     question = questions[current_question_index]
     
     if request.method == 'POST':
-        user_answer = request.form['user_answer']
-        correct_answer = question['correct_answer']
+        user_answer = request.form.get('user_answer', '').strip()
+        correct_answer = question['correct_answer'].strip()
         
-        # Check if the user's answer is correct
-        if user_answer == correct_answer:
+        # Normalize answers
+        is_correct = normalize_answer(user_answer) == normalize_answer(correct_answer)
+        if is_correct:
             session['score'] += 1 
         
         # Save the user's answer and its correctness in the session
-        session['answers'].append({
+        answers = session.get('answers', [])
+        answers.append({
             'question': question['question'],
             'user_answer': user_answer,
             'correct_answer': correct_answer,
-            'is_correct': user_answer == correct_answer
+            'is_correct': is_correct
         })
+        session['answers'] = answers
         
         session['current_question'] += 1
         
