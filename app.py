@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import json
+import re
 
 app = Flask(__name__)
 
@@ -13,10 +14,14 @@ def load_questions():
 app.secret_key = 'your_secret_key'  # Secret key to encrypt session cookies
 
 def normalize_answer(ans):
-    """Normalize answers for comparison by removing LaTeX delimiters, spaces, and lowering case."""
+    """Normalize answers by removing LaTeX delimiters \( \), spaces, and lowercasing."""
     if not ans:
         return ''
-    return ans.replace('\\(', '').replace('\\)', '').replace(' ', '').lower()
+    # Remove LaTeX delimiters \( and \)
+    ans = re.sub(r'\\\(|\\\)', '', ans)
+    # Remove spaces and convert to lowercase
+    ans = ans.replace(' ', '').lower()
+    return ans
 
 # Initialize session variables
 @app.before_request
@@ -32,7 +37,7 @@ def before_request():
 @app.route('/', methods=['GET', 'POST'])
 def index():
     """This route displays a question, checks answers, and moves to the next question."""
-    questions = load_questions()  # Load all questions
+    questions = load_questions()
     current_question_index = session['current_question']  
 
     # If all questions are answered, display the final score
@@ -46,7 +51,7 @@ def index():
         user_answer = request.form.get('user_answer', '').strip()
         correct_answer = question['correct_answer'].strip()
         
-        # Normalize answers
+        # Normalize and compare answers
         is_correct = normalize_answer(user_answer) == normalize_answer(correct_answer)
         if is_correct:
             session['score'] += 1 
