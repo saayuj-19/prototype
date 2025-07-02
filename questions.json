@@ -4,24 +4,14 @@
       "type": "multiple_choice",
       "category": "Math (Arithmetic)",
       "question": "What is the value of 7 × 8?",
-      "options": [
-        "48",
-        "56",
-        "63",
-        "72"
-      ],
+      "options": ["48", "56", "63", "72"],
       "correct_answer": "56"
     },
     {
       "type": "multiple_choice",
       "category": "Math (Algebra with Symbols)",
       "question": "If x = 3, what is the value of 4x + 5?",
-      "options": [
-        "17",
-        "12",
-        "15",
-        "20"
-      ],
+      "options": ["17", "12", "15", "20"],
       "correct_answer": "17"
     },
     {
@@ -53,6 +43,19 @@
         "She enjoys reading, writing and painting."
       ],
       "correct_answer": "She enjoys reading, writing, and painting."
+    },
+    {
+      "type": "user_input",
+      "category": "Math (Word Problem)",
+      "question": "What is the value of x² when x = 4?",
+      "correct_answer": "16"
+    },
+    {
+      "type": "multiple_choice",
+      "category": "Math (Algebra)",
+      "question": "If 2x - 5 = 9, what is the value of x?",
+      "options": ["5", "6", "7", "4"],
+      "correct_answer": "7"
     }
   ]
 }
