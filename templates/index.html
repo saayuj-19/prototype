@@ -5,18 +5,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Quiz</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-    <script
-        defer
-        src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
-        onload="renderMathInElement(document.body, {
-            delimiters: [
-                {left: '\\(', right: '\\)', display: false},
-                {left: '\\[', right: '\\]', display: true}
-            ]
-        });"
-    ></script>
+    <!-- MathJax CDN for rendering LaTeX -->
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
 
     <style>
         body {
@@ -81,6 +73,13 @@
         </form>
         {% endif %}
     </div>
+
+    <script>
+        // After the page loads, MathJax will render all LaTeX math on the page
+        window.onload = function() {
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        };
+    </script>
 </body>
 
 </html>
